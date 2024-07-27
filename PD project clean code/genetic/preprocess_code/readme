@@ -1,7 +1,0 @@
-1. run extraction.py
-  It will extract related columns and combine into one
-2. extract_clean_patient_event_date.py
-  it will remove and clean duplicated dates for the same event.
-3. run extract_ledd.py
-4. run combine_all_into_one
-
