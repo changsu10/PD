@@ -1,12 +1,12 @@
 ### CODE
-* preprocess_rna_count.ipynb
+* preprocess_rna_count.ipynb\
   Preprocess large raw RNAseq data, and extract basic group/age/sex/race.
   Output:
   1) PP_rnaseq_filtered.csv
   2) meta.csv
   3) data.csv
 
-* planB_preprocess_ppmi_clinical.ipynb
+* planB_preprocess_ppmi_clinical.ipynb\
   Extract clinical data for all samples in PPMI cohort (ignore GWAS data availability & RNA time)
   Output:
   1) planB_clinical.csv
