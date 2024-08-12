@@ -9,6 +9,10 @@ traits = {'abeta_42_beta_pval','alpha_syn_beta_pval','benton_beta_pval',...
 cutoffs = [0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5];%0.5% top, 1% top, ...
 resultsMatrix = zeros(length(cutoffs), length(traits));
 
+if ~exist('../GPSnet_result/', 'dir')
+            mkdir('../GPSnet_result/')
+end
+
 for i = 1:length(traits)
     trait = traits{i};
     for j = 1:length(cutoffs)
