@@ -114,7 +114,7 @@ for (trait in traits){
     })
     
     save_group_df=df[,c('term_id','term_name','p_value','source','term_size')]
-    save_group_df$common_group=group_vector
+    save_group_df$common_group=group_vector## add additional column indicating group
     
     # save results
     write.table(save_group_df,

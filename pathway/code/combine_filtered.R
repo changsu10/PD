@@ -1,23 +1,16 @@
 ### combine GO, REAC, KEGG filtered into one dataframe per trait
 ### and map theri level to common categories
 args = commandArgs(trailingOnly=TRUE)
-if (length(args)!=1) {
-  stop("Need 1 input: 
-      save path", call.=FALSE)
+if (length(args)!=2) {
+  stop("Need 2 input: 
+      save path，
+      trait list", call.=FALSE)
 }
 
 save_path=args[1]
-setwd(save_path)
+traits <- as.vector(strsplit(args[2], ",")[[1]])
 
-# traits=c('updrs1','updrs2','updrs3','updrs4','schwab',#motor
-#          'pigd_scores','tremor_scores','moca','benton','lns','hvlt','symbol_digit','semantic_fluency',#cognition
-#          'gds', 'stai',#mood
-#          'scopa',#Autonomic
-#          'ess','rem',#sleep
-#          'gco',#global
-#          'total_tau','p_tau181p','alpha_syn','abeta_42'#biomarker
-# )
-traits=c('updrs4')
+setwd(save_path)
 #####
 replace_nullLevel_with_termName=function(df){
   index1=which(df$ancestor_name=='')

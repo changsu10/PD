@@ -1,36 +1,30 @@
 library(circlize)
 library(RColorBrewer)
 library(ggplot2)
+library(dplyr)
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args)!=2) {
-  stop("Need 2 input: 
-      read path and save path", call.=FALSE)
+if (length(args)!=3) {
+  stop("Need 3 input: 
+      read path, 
+      save path,
+      traits", call.=FALSE)
 }
 
-file_path=args[1]#"../result/planB_countfilter100_norm/combined_all_itself/"
-save_path=args[2]#"../result/planB_countfilter100_norm/bubble_all_itself/"
+file_path=args[1]
+save_path=args[2]
+traits <- as.vector(strsplit(args[3], ",")[[1]])
 
-traits=c(#'motor',#'updrs2','updrs3','schwab',#motor
-         #'pigd_scores','tremor_scores',
-         'moca',#'benton','lns','hvlt','symbol_digit','semantic_fluency',#cognition
-         'gds', 'stai',#mood
-         #'scopa',#Autonomic
-         'ess','rem',#sleep
-         #'gco',#global
-         'total_tau','p_tau181p','alpha_syn','abeta_42'#biomarker
-)
-
-trait='abeta_42'
 top_num=30
 for (trait in traits){
   df=read.table(paste0(file_path,trait,'_enrichedPathway_filtered.tsv'),sep='\t',header=T)
   df=df[,c('term_name','p_value','source','term_size')]
+  df <- df %>%
+    mutate(term_name = ifelse(nchar(term_name) > 80, substr(term_name, 1, 80), term_name))
   ####### bubble plot
   plot_df=df
   plot_df=plot_df[order(plot_df$p_value),][1:top_num,]
   plot_df$logp=-log10(plot_df$p_value)
-  # write.csv(plot_df$term_name,paste0(save_path,trait,'_T',top_num,'pathway.csv'),row.names = F,col.names=F,quote = F)
   
   plot_df=plot_df[order(plot_df$p_value,decreasing = F),]
   plot_df$term_name=paste(plot_df$source,plot_df$term_name,sep=':')

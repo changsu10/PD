@@ -5,14 +5,16 @@ library(data.table)
 #library(KEGGgraph)
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args)!=2) {
-  stop("Need 2 input: 
+if (length(args)!=3) {
+  stop("Need 3 input: 
       GPSnet_result path, 
-      save path", call.=FALSE)
+      save path,
+      trait list", call.=FALSE)
 }
 
-gpsnet_result_path=args[1]#'../../GPSnet/planB/planB_GPSnet_result_final/'
-save_path=args[2]#'/Users/manage/Desktop/amp_pd/rnaseq/pathway/GO/'
+gpsnet_result_path=args[1]
+save_path=args[2]
+traits <- as.vector(strsplit(args[3], ",")[[1]])
 
 queryKEGG <- function(query) {
   result <- NULL
@@ -43,16 +45,6 @@ queryKEGG <- function(query) {
   return(result)
 }
 
-######
-# traits=c('updrs1','updrs2','updrs3','updrs4','schwab',#motor
-#          'pigd_scores','tremor_scores','moca','benton','lns','hvlt','symbol_digit','semantic_fluency',#cognition
-#          'gds', 'stai',#mood
-#          'scopa',#Autonomic
-#          'ess','rem',#sleep
-#          'gco',#global
-#          'total_tau','p_tau181p','alpha_syn','abeta_42'#biomarker
-# )
-traits=c('updrs4')
 ##############################
 query <- list()
 for (trait in traits) {

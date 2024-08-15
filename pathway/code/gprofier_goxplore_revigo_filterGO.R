@@ -6,33 +6,26 @@ library(stringi)
 library(XML)
 library(readr)
 library(GO.db)
-library('GOfuncR')
+library(GOfuncR)
 library(data.table)
 library(ggplot2)
 library(dplyr)
 library(data.table)
-library("annotate")    
+library(annotate)    
 library(visNetwork) 
 
 args = commandArgs(trailingOnly=TRUE)
-if (length(args)!=2) {
-  stop("Need 2 input: 
+if (length(args)!=3) {
+  stop("Need 3 input: 
       GPSnet_result path, 
-      save path", call.=FALSE)
+      save path,
+      trait list", call.=FALSE)
 }
 
-gpsnet_result_path=args[1]#'../../GPSnet/planB/planB_GPSnet_result_final/'
-save_path=args[2]#'/Users/manage/Desktop/amp_pd/rnaseq/pathway/GO/'
+gpsnet_result_path=args[1]
+save_path=args[2]
+traits <- as.vector(strsplit(args[3], ",")[[1]])
 
-# traits=c('updrs1','updrs2','updrs3','updrs4','schwab',#motor
-#          'pigd_scores','tremor_scores','moca','benton','lns','hvlt','symbol_digit','semantic_fluency',#cognition
-#          'gds', 'stai',#mood
-#          'scopa',#Autonomic
-#          'ess','rem',#sleep
-#          'gco',#global
-#          'total_tau','p_tau181p','alpha_syn','abeta_42'#biomarker
-# )
-traits=c('updrs4')
 #################################################
 run_revigo <- function(go_file) {
   # Read user data from a file
@@ -78,7 +71,7 @@ run_revigo <- function(go_file) {
 #################################################
 query <- list()
 for (trait in traits) {
-  if (trait=='hvlt'){# need to combine 4 into 1
+  if (trait=='hvlt'){# need to combine 4 hvlt into 1
     hvlt=c()
     for (t in c('hvlt_delayed_recall','hvlt_recog_disc_index','hvlt_retention','hvlt_total_recall')){
       file_path <- paste0(gpsnet_result_path, t, '.txt')
