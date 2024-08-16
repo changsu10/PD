@@ -9,7 +9,7 @@ parent_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/pathway/'
 
 # save version and suffix
 version='DEGs_hs_vs_normal.psudobulk.default'
-suffix='all_itself'
+#suffix='all_itself'
 
 # traits (name of gene module result files)
 trait_list='B_cells_filtered,Dendritic_cells_filtered,Fibroblasts_filtered,Keratinocytes_filtered,Plasma_cells_filtered,Proliferating_cells_filtered,Sweat_gland_Myoepithelial_cells_filtered,T_cells_filtered'
@@ -39,21 +39,23 @@ if (!dir.exists(save_path)) {
 cmd <- paste("Rscript gprofier_filterKEGG.R",gpsnet_result_path,save_path,trait_list)
 system(cmd)
 
-## Combine output files into one file
-combined_save_path=paste0(parent_save_path,version,'/combined_',suffix,'/')
+#---- Combine output files into one file ----
+combine_database='go,reac'
+combined_save_path=paste0(parent_save_path,version,'/combined_',combine_database,'/')
 if (!dir.exists(combined_save_path)) {
   dir.create(combined_save_path, recursive = TRUE)
 }
-cmd <- paste("Rscript combine_filtered.R",combined_save_path,trait_list)
+cmd <- paste("Rscript combine_filtered.R",combined_save_path,trait_list,combine_database)
 system(cmd)
 
 # ---- Plot Bubble Plot ----
-combined_save_path=paste0(parent_save_path,version,'/combined_',suffix,'/')
-bubble_save_path=paste0(parent_save_path,version,'/bubble_',suffix,'/')
+top_num=100
+combined_save_path=paste0(parent_save_path,version,'/combined_',combine_database,'/')
+bubble_save_path=paste0(parent_save_path,version,'/bubble_',combine_database,'/T',top_num,'/')
 if (!dir.exists(bubble_save_path)) {
   dir.create(bubble_save_path, recursive = TRUE)
 }
-cmd <- paste("Rscript plot_bubble.R",combined_save_path,bubble_save_path,trait_list)
+cmd <- paste("Rscript plot_bubble.R",combined_save_path,bubble_save_path,trait_list,top_num,20,12)#h,w
 system(cmd)
 
 # ---- Group pathwasy into common groups ----
