@@ -208,7 +208,8 @@ for f in file_list:
             new_row_list+=[num_gene]+raw_stats
 
     new_row_df = pd.DataFrame([new_row_list], columns=stats_cols)
-    summary_df = summary_df.append(new_row_df, ignore_index=True)
+    #summary_df = summary_df.append(new_row_df, ignore_index=True)
+    summary_df = pd.concat([summary_df,new_row_df], ignore_index=True)
 
 summary_df.to_csv(save_path+'summary_stats.csv',index=False)
 
