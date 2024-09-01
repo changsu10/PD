@@ -31,7 +31,12 @@ if (length(args)==4){
 for (trait in traits){
   df=read.table(paste0(file_path,trait,'_enrichedPathway_filtered.tsv'),sep='\t',header=T)
   df=df[,c('term_name','p_value','source','term_size')]
-  df=df[order(df$p_value),][1:top_num,]
+  if (dim(df)[1]<top_num){
+    print(paste('Use All pathways!',trait,'has',dim(df)[1],'enriched pathways in total, smaller than topNum',top_num))
+    df=df
+  } else{
+    df=df[order(df$p_value),][1:top_num,]
+  }
   df$logp=-log10(df$p_value)
   write.csv(df,paste0(save_path,trait,'_bubble_T',top_num,'.csv'),row.names = FALSE)
 

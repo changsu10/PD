@@ -2,18 +2,18 @@ setwd('/Users/manage/Desktop/Github/PD/pathway/code/')
 
 # ---- Set Path ----
 # gene module path
-gpsnet_result_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/GPSnet/DEGs_hs_vs_normal.psudobulk.default/matlab/DEGs_hs_vs_normal.psudobulk.default_norm/GPSnet_result_final/'
+gpsnet_result_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet//GPSnet_result_final/'
 
 # save path
-parent_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/pathway/'
+parent_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/pathway/'
 
 # save version and suffix
-version='DEGs_hs_vs_normal.psudobulk.default'
-#suffix='all_itself'
+#version='DEGs_lesion_vs_normal.psudobulk.default'
+version=''
 
 # traits (name of gene module result files)
-trait_list='B_cells_filtered,Dendritic_cells_filtered,Fibroblasts_filtered,Keratinocytes_filtered,Plasma_cells_filtered,Proliferating_cells_filtered,Sweat_gland_Myoepithelial_cells_filtered,T_cells_filtered'
-
+#trait_list='B_cells_filtered,Dendritic_cells_filtered,Fibroblasts_filtered,Keratinocytes_filtered,Plasma_cells_filtered,Proliferating_cells_filtered,Sweat_gland_Myoepithelial_cells_filtered,T_cells_filtered'
+trait_list='Keratinocytes'
 # ---- Run pathway enrichment on 3 databases: GO, REAC, KEGG ----
 # GO
 save_path=paste0(parent_save_path,version,'/GO/')

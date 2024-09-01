@@ -11,19 +11,19 @@ library(RColorBrewer)
 
 # ---- Set File Path ----
 setwd('/Users/manage/Desktop/GitHub/PD/pathway/code')
-gpsnet_result_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/GPSnet/DEGs_hs_vs_normal.psudobulk.default/matlab/DEGs_hs_vs_normal.psudobulk.default_norm/GPSnet_result_keep_score_final/'
-gpsnet_raw_input_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/DEGs_hs_vs_normal.psudobulk.default/'
-plot_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/pathway/DEGs_hs_vs_normal.psudobulk.default/net_plot/'
+gpsnet_result_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/GPSnet_result_keep_score_final/'
+gpsnet_raw_input_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/lesion_data/'
+plot_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/pathway/net_plot/'
 
 log2FC_var='log2FoldChange'
 gene_var='...1'
 pval_var='pvalue'
 padj_var='padj'
 
-traits <- c('B_cells_filtered', 'Dendritic_cells_filtered', 'Fibroblasts_filtered', 
+traits <- c('B_cells_filtered', 'Dendritic_cells_filtered', 'Fibroblasts_filtered', 'Endothelial_cells_filtered',
             'Keratinocytes_filtered', 'Plasma_cells_filtered','Proliferating_cells_filtered',
             'Sweat_gland_Myoepithelial_cells_filtered','T_cells_filtered')# filenames of GPSnet output files
-
+traits=c('Keratinocytes_filtered')
 is_label_pathway=FALSE
 if (is_label_pathway){
   highlight_pathways <- read_csv('./highlight_pathways.csv')#highlight pathways
@@ -37,6 +37,7 @@ if (!dir.exists(plot_save_path)) {
 # ---- Read Reference Data ----
 edges <- read_csv('../../ref/ppi.csv')
 map_ref <- read_csv('../../ref/gene_vocab.csv')
+map_ref$ncbi_id=as.character(map_ref$ncbi_id)
 G <- graph_from_data_frame(d = edges, directed = FALSE)
 
 # ---- Functions: prep_net, plot_net ----
@@ -47,6 +48,7 @@ prep_net=function(t,
   # Read module genes
   node_score <- read_csv(paste0(gpsnet_result_path, t, '.txt'), col_names = FALSE)# !! Check if file suffix is txt !!
   colnames(node_score) <- c('ncbi_id', 'gene_confidence_score')
+  node_score$gene_confidence_score=as.numeric(node_score$gene_confidence_score)
   nodes_list <- as.character(node_score$ncbi_id)  # Convert to character
   
   # Ensure the nodes in nodes_list are present in the graph
@@ -138,7 +140,7 @@ plot_net=function(t,nodes,edges,is_label_pathway,color_by,log2FC_var){
   nodes$ncbi_id <- as.character(nodes$ncbi_id)
   edges$from <- as.character(edges$from)
   edges$to <- as.character(edges$to)
-  
+
   if (is_label_pathway){
     # Create a lookup table for pathways
     pathway_lookup <- nodes %>% select(ncbi_id, pathway) %>% deframe()
@@ -164,7 +166,7 @@ plot_net=function(t,nodes,edges,is_label_pathway,color_by,log2FC_var){
       geom_edge_link(color='lightgrey',width=0.1) + 
       geom_node_point(aes(size = gene_confidence_score, color = !!sym(log2FC_var))) +
       scale_size_continuous(range = c(5, 10)) + 
-      scale_color_gradientn(colours = c("#e64072",'white', '#62aec5'),
+      scale_color_gradientn(colours = c('#62aec5','white',"#e64072"),
                             limits = c(-5,5),oob = scales::squish)+
       geom_node_text(aes(label=symbol),size=3)+
       
