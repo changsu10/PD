@@ -5,10 +5,16 @@ import sys
 import os
 
 trait=sys.argv[1]
-top_gene_count_cutoff = float(sys.argv[2])#0.005
-save_final_module_path=sys.argv[3]
-save_final_module_with_score_path=sys.argv[4]
-summary_df=sys.argv[5]
+sub_folder=sys.argv[2]
+steps=sys.argv[3]
+
+top_gene_count_cutoff = float(sys.argv[4])#0.005
+save_final_module_path=sys.argv[5]
+save_final_module_with_score_path=sys.argv[6]
+summary_df=sys.argv[7]
+
+steps=steps.split(',')
+steps=[int(i) for i in steps]
 
 if not os.path.exists(save_final_module_path):
     os.makedirs(save_final_module_path)
@@ -18,15 +24,15 @@ if not os.path.exists(save_final_module_with_score_path):
 
 if not os.path.exists(summary_df):
     with open(summary_df, 'w') as f:
-        f.write('trait\tcutoff\tsize\n')
+        f.write('trait\tcombo\tcutoff\tsize\n')
     f.close()
 
 # ---------------------------------------------------------------------------
 combined_module = {}
 combined_score = {}
-for start_index in [0,10000,20000,30000,40000,50000,60000,70000,80000,90000]:
-    score=pickle.load(open('../Raw_module/'+trait+'/score_'+str(start_index)+'.pkl','rb'))
-    raw_module=pickle.load(open('../Raw_module/'+trait+'/module_'+str(start_index)+'.pkl','rb'))
+for start_index in steps:
+    score=pickle.load(open('../Raw_module/'+trait+'/'+sub_folder+'/score_'+str(start_index)+'.pkl','rb'))
+    raw_module=pickle.load(open('../Raw_module/'+trait+'/'+sub_folder+'/module_'+str(start_index)+'.pkl','rb'))
     combined_module.update(raw_module)
     combined_score.update(score)
 
@@ -66,5 +72,6 @@ Final_Module.to_csv(save_final_module_path+trait+'_'+str(top_gene_count_cutoff)+
 Final_Module_with_score.to_csv(save_final_module_with_score_path+trait+'_'+str(top_gene_count_cutoff)+'.txt',index=False)
 
 f=open(summary_df,'a')
-f.write(f'{trait}\t{top_gene_count_cutoff}\t{Final_Module.shape[0]}\n')
+f.write(f'{trait}\t{sub_folder}\t{top_gene_count_cutoff}\t{Final_Module.shape[0]}\n')
 f.close()
+

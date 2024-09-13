@@ -10,20 +10,38 @@ library(gprofiler2)
 library(RColorBrewer)
 
 # ---- Set File Path ----
-setwd('/Users/manage/Desktop/GitHub/PD/pathway/code')
-gpsnet_result_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/GPSnet_result_keep_score_final/'
-gpsnet_raw_input_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/lesion_data/'
-plot_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/pathway/net_plot/'
+args = commandArgs(trailingOnly=TRUE)
+if (length(args)!=5) {
+  stop("Need 4 input: 
+      GPSnet_result path, 
+      gpsnet_raw_input_path,
+      plot_save_path,
+      trait list,
+      gpsnet_result_suffix", call.=FALSE)
+}
 
+gpsnet_result_path=args[1]
+gpsnet_raw_input_path=args[2]
+plot_save_path=args[3]
+traits <- as.vector(strsplit(args[4], ",")[[1]])
+gpsnet_result_suffix = args[5]
+
+# gpsnet_result_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/GPSnet_result_keep_score_final/'
+# gpsnet_raw_input_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/lesion_data/'
+# plot_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/pathway/net_plot/'
+
+# traits <- c('B_cells_filtered', 'Dendritic_cells_filtered', 'Fibroblasts_filtered', 'Endothelial_cells_filtered',
+#             'Keratinocytes_filtered', 'Plasma_cells_filtered','Proliferating_cells_filtered',
+#             'Sweat_gland_Myoepithelial_cells_filtered','T_cells_filtered')# filenames of GPSnet output files
+# traits=c('Keratinocytes_filtered')
+#--------------
+setwd('/Users/manage/Desktop/Github/PD/pathway/code/')
 log2FC_var='log2FoldChange'
 gene_var='...1'
 pval_var='pvalue'
 padj_var='padj'
 
-traits <- c('B_cells_filtered', 'Dendritic_cells_filtered', 'Fibroblasts_filtered', 'Endothelial_cells_filtered',
-            'Keratinocytes_filtered', 'Plasma_cells_filtered','Proliferating_cells_filtered',
-            'Sweat_gland_Myoepithelial_cells_filtered','T_cells_filtered')# filenames of GPSnet output files
-traits=c('Keratinocytes_filtered')
+#--------------
 is_label_pathway=FALSE
 if (is_label_pathway){
   highlight_pathways <- read_csv('./highlight_pathways.csv')#highlight pathways
@@ -34,6 +52,7 @@ color_by='logfc'
 if (!dir.exists(plot_save_path)) {
   dir.create(plot_save_path, recursive = TRUE)
 }
+
 # ---- Read Reference Data ----
 edges <- read_csv('../../ref/ppi.csv')
 map_ref <- read_csv('../../ref/gene_vocab.csv')
@@ -42,11 +61,11 @@ G <- graph_from_data_frame(d = edges, directed = FALSE)
 
 # ---- Functions: prep_net, plot_net ----
 prep_net=function(t,
-                  gpsnet_result_path,
+                  gpsnet_result_path,gpsnet_result_suffix,
                   gpsnet_raw_input_path,log2FC_var,gene_var,pval_var,padj_var,
                   is_label_pathway){
   # Read module genes
-  node_score <- read_csv(paste0(gpsnet_result_path, t, '.txt'), col_names = FALSE)# !! Check if file suffix is txt !!
+  node_score <- read_csv(paste0(gpsnet_result_path, t, gpsnet_result_suffix, '.txt'), col_names = FALSE)# !! Check if file suffix is txt !!
   colnames(node_score) <- c('ncbi_id', 'gene_confidence_score')
   node_score$gene_confidence_score=as.numeric(node_score$gene_confidence_score)
   nodes_list <- as.character(node_score$ncbi_id)  # Convert to character
@@ -202,7 +221,7 @@ plot_net=function(t,nodes,edges,is_label_pathway,color_by,log2FC_var){
 for (t in traits) {
   # ---- Prepare Node and Edge ----
   dfs_list=prep_net(t,
-                    gpsnet_result_path,
+                    gpsnet_result_path,gpsnet_result_suffix,
                     gpsnet_raw_input_path,log2FC_var,gene_var,pval_var,padj_var,
                     is_label_pathway)
 

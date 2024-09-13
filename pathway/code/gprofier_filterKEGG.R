@@ -6,15 +6,17 @@ library(data.table)
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
-  stop("Need 3 input: 
+  stop("Need 4 input: 
       GPSnet_result path, 
       save path,
-      trait list", call.=FALSE)
+      trait list,
+      gpsnet_result_suffix", call.=FALSE)
 }
 
 gpsnet_result_path=args[1]
 save_path=args[2]
 traits <- as.vector(strsplit(args[3], ",")[[1]])
+gpsnet_result_suffix = args[4]
 
 queryKEGG <- function(query) {
   result <- NULL
@@ -51,7 +53,7 @@ for (trait in traits) {
   if (trait=='hvlt'){# need to combine 4 into 1
     hvlt=c()
     for (t in c('hvlt_delayed_recall','hvlt_recog_disc_index','hvlt_retention','hvlt_total_recall')){
-      file_path <- paste0(gpsnet_result_path, t, '.txt')
+      file_path <- paste0(gpsnet_result_path, t, gpsnet_result_suffix, '.txt')
       if (file.exists(file_path) && file.info(file_path)$size != 0) {
         hvlt=c(hvlt,as.vector(read.csv(file_path, header = FALSE)$V1))
       }
@@ -59,7 +61,7 @@ for (trait in traits) {
     hvlt=unique(hvlt)
     query[[trait]]=as.vector(hvlt)
   } else{
-    file_path <- paste0(gpsnet_result_path, trait, '.txt')
+    file_path <- paste0(gpsnet_result_path, trait, gpsnet_result_suffix, '.txt')
     # Check if file exists and is not empty
     if (file.exists(file_path) && file.info(file_path)$size != 0) {
       query[[trait]] <- as.vector(read.csv(file_path, header = FALSE)$V1)
@@ -85,7 +87,7 @@ for (trait in traits){
     next
   }
   result_table=one_trait_gostres$result
-  result_table=result_table[result_table$term_size>5 & result_table$term_size<1000,]#filter pathways
+  #result_table=result_table[result_table$term_size>5 & result_table$term_size<1000,]#filter pathways
   terms=result_table$term_id
   terms <- gsub("KEGG:", "", terms)#remove prefix
   

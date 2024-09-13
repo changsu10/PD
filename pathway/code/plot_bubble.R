@@ -39,16 +39,18 @@ for (trait in traits){
   }
   df$logp=-log10(df$p_value)
   write.csv(df,paste0(save_path,trait,'_bubble_T',top_num,'.csv'),row.names = FALSE)
-
+  df=read.csv(paste0(save_path,trait,'_bubble_T',top_num,'.csv'))
   df <- df %>%
-    mutate(term_name = ifelse(nchar(term_name) > 80, substr(term_name, 1, 80), term_name))
+    mutate(term_name = ifelse(nchar(term_name) > 85, 
+                              paste0(substr(term_name, 1, 80), "...", substr(term_name, nchar(term_name)-4, nchar(term_name))),  
+                              term_name))
   ####### bubble plot
   plot_df=df
   
   plot_df=plot_df[order(plot_df$p_value,decreasing = F),]
   plot_df$term_name=paste(plot_df$source,plot_df$term_name,sep=':')
   plot_df$term_name=factor(plot_df$term_name,levels=rev(plot_df$term_name))
-  
+
   bp=ggplot(plot_df, aes(x = logp, y = term_name)) + 
     geom_point(aes(size = term_size), color = 'blue',alpha = 0.7) +
     labs(x='-log10(p)',y='',title=trait)+

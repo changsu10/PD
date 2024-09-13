@@ -23,6 +23,14 @@ if (!dir.exists(save_path)) {
 cmd <- paste("Rscript gprofier_goxplore_revigo_filterGO.R",gpsnet_result_path,save_path,trait_list)
 system(cmd)
 
+# GO
+save_path=paste0(parent_save_path,version,'/GO_nogoxplore_norevigo/')
+if (!dir.exists(save_path)) {
+  dir.create(save_path, recursive = TRUE)
+}
+cmd <- paste("Rscript gprofier_nogoxplore_norevigo_filterGO.R",gpsnet_result_path,save_path,trait_list)
+system(cmd)
+
 # REAC
 save_path=paste0(parent_save_path,version,'/REAC/')
 if (!dir.exists(save_path)) {
