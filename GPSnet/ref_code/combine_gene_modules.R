@@ -7,7 +7,7 @@ combined_traits=list('motor'=c('updrs2','updrs3','schwab'),
                 'mood'=c('gds', 'stai'),
                 'sleep'=c('ess','rem')
 )
-gene_module_path='/Users/manage/Desktop/amp_pd_cleaned_results/genomic/GPSnet/GPSnet_result_final/'
+gene_module_path='/Users/manage/Desktop/amp_pd_cleaned_results/genetic/GPSnet/GPSnet_result_final/'
 
 # Merge gene modules and save
 for (combined_trait in names(combined_traits)) {

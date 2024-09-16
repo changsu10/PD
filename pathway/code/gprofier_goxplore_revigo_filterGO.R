@@ -78,25 +78,32 @@ run_revigo <- function(go_file) {
 #################################################
 query <- list()
 for (trait in traits) {
-  if (trait=='hvlt'){# need to combine 4 hvlt into 1
-    hvlt=c()
-    for (t in c('hvlt_delayed_recall','hvlt_recog_disc_index','hvlt_retention','hvlt_total_recall')){
-      file_path <- paste0(gpsnet_result_path, t, gpsnet_result_suffix,'.txt')
-      if (file.exists(file_path) && file.info(file_path)$size != 0) {
-        hvlt=c(hvlt,as.vector(read.csv(file_path, header = FALSE)$V1))
-      }
-    }
-    hvlt=unique(hvlt)
-    query[[trait]]=as.vector(hvlt)
-  } else{
-    file_path <- paste0(gpsnet_result_path, trait, gpsnet_result_suffix, '.txt')
+    file_path <- paste0(gpsnet_result_path, trait, gpsnet_result_suffix)
     # Check if file exists and is not empty
     if (file.exists(file_path) && file.info(file_path)$size != 0) {
       query[[trait]] <- as.vector(read.csv(file_path, header = FALSE)$V1)
     } else {
       query[[trait]] <- vector()  # Creates an empty vector
     }
-  }
+  # if (trait=='hvlt'){# need to combine 4 hvlt into 1
+  #   hvlt=c()
+  #   for (t in c('hvlt_delayed_recall','hvlt_recog_disc_index','hvlt_retention','hvlt_total_recall')){
+  #     file_path <- paste0(gpsnet_result_path, t, gpsnet_result_suffix,'.txt')
+  #     if (file.exists(file_path) && file.info(file_path)$size != 0) {
+  #       hvlt=c(hvlt,as.vector(read.csv(file_path, header = FALSE)$V1))
+  #     }
+  #   }
+  #   hvlt=unique(hvlt)
+  #   query[[trait]]=as.vector(hvlt)
+  # } else{
+  #   file_path <- paste0(gpsnet_result_path, trait, gpsnet_result_suffix, '.txt')
+  #   # Check if file exists and is not empty
+  #   if (file.exists(file_path) && file.info(file_path)$size != 0) {
+  #     query[[trait]] <- as.vector(read.csv(file_path, header = FALSE)$V1)
+  #   } else {
+  #     query[[trait]] <- vector()  # Creates an empty vector
+  #   }
+  # }
 }
 
 for (trait in traits){
@@ -107,6 +114,7 @@ for (trait in traits){
                             sources = c("GO"),
                             organism = "hsapiens",
                             multi_query = FALSE)
+  print(paste('running',trait))
   if (is.null(one_trait_gostres)){
     cat('No enriched pathways in',trait)
     next
