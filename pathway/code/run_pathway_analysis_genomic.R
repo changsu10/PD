@@ -169,26 +169,26 @@ system(cmd)
 
 # ----  Plot refined heatmap ----
 ## GO
-heatmap_save_path=paste0('/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/GO/')
+heatmap_save_path=paste0('/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/GO/')
 save_name='GO_heatmap_refined'
-heatmap_df_file='/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/GO/heatmap_pathway_top20_go.csv'
-order_pathway_file='/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/GO/refine_order_pathway_v4.csv'
+heatmap_df_file='/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/GO/heatmap_pathway_top20_go.csv'
+order_pathway_file='/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/GO/refine_order_pathway.csv'
 cmd=paste('Rscript plot_refined_heatmap.R',heatmap_df_file,order_pathway_file,heatmap_traits,heatmap_save_path,save_name)
 system(cmd)
 
 ## REAC
-heatmap_save_path=paste0('/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/REAC/')
+heatmap_save_path=paste0('/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/REAC/')
 save_name='REAC_heatmap_refined'
-heatmap_df_file='/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/REAC/heatmap_pathway_top20_reac.csv'
-order_pathway_file='/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/REAC/refine_order_pathway_v2.csv'
+heatmap_df_file='/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/REAC/heatmap_pathway_top20_reac.csv'
+order_pathway_file='/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/REAC/refine_order_pathway.csv'
 cmd=paste('Rscript plot_refined_heatmap.R',heatmap_df_file,order_pathway_file,heatmap_traits,heatmap_save_path,save_name)
 system(cmd)
 
 ## KEGG
-heatmap_save_path=paste0('/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/KEGG/')
+heatmap_save_path=paste0('/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/KEGG/')
 save_name='KEGG_heatmap_refined'
-heatmap_df_file='/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/KEGG/heatmap_pathway_top20_kegg.csv'
-order_pathway_file='/Users/manage/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/KEGG/refine_order_pathway_v1.csv'
+heatmap_df_file='/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/KEGG/heatmap_pathway_top20_kegg.csv'
+order_pathway_file='/Users/ManqiZhou/Desktop/amp_pd_cleaned_results/genomic/pathway/heatmap/KEGG/refine_order_pathway.csv'
 cmd=paste('Rscript plot_refined_heatmap.R',heatmap_df_file,order_pathway_file,heatmap_traits,heatmap_save_path,save_name)
 system(cmd)
 

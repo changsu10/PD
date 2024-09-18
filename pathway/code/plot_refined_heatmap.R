@@ -100,7 +100,7 @@ p=pheatmap(plot_matrix,
            cluster_cols = F, 
            color = colorRampPalette(c("white", '#D53389',"#6D0C68"))(100),
            main = "")
-ggsave(paste0(save_path,save_name,'_1group1row.png'),p,width=14,height=20,dpi=300,limitsize = FALSE)
+ggsave(paste0(save_path,save_name,'_1group1row.png'),p,width=18,height=20,dpi=300,limitsize = FALSE)
 write.csv(plot_matrix,paste0(save_path,save_name,'_1group1row.csv'))
 
 # ---- One group One row: Sankey ----
