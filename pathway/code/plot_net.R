@@ -26,27 +26,12 @@ plot_save_path=args[3]
 traits <- as.vector(strsplit(args[4], ",")[[1]])
 gpsnet_result_suffix = args[5]
 
-# gpsnet_result_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/GPSnet_result_keep_score_final/'
-# gpsnet_raw_input_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/GPSnet/lesion_data/'
-# plot_save_path='/Users/manage/Desktop/chang_runGPSnet_08-09-2024/python/pathway/net_plot/'
-
-# traits <- c('B_cells_filtered', 'Dendritic_cells_filtered', 'Fibroblasts_filtered', 'Endothelial_cells_filtered',
-#             'Keratinocytes_filtered', 'Plasma_cells_filtered','Proliferating_cells_filtered',
-#             'Sweat_gland_Myoepithelial_cells_filtered','T_cells_filtered')# filenames of GPSnet output files
-# traits=c('Keratinocytes_filtered')
 #--------------
-setwd('/Users/manage/Desktop/Github/PD/pathway/code/')
+setwd('~/Desktop/Github/PD/pathway/code/')
 log2FC_var='log2FoldChange'
 gene_var='...1'
 pval_var='pvalue'
 padj_var='padj'
-
-#--------------
-is_label_pathway=FALSE
-if (is_label_pathway){
-  highlight_pathways <- read_csv('./highlight_pathways.csv')#highlight pathways
-}
-
 color_by='logfc'
 
 if (!dir.exists(plot_save_path)) {
@@ -62,10 +47,9 @@ G <- graph_from_data_frame(d = edges, directed = FALSE)
 # ---- Functions: prep_net, plot_net ----
 prep_net=function(t,
                   gpsnet_result_path,gpsnet_result_suffix,
-                  gpsnet_raw_input_path,log2FC_var,gene_var,pval_var,padj_var,
-                  is_label_pathway){
+                  gpsnet_raw_input_path,log2FC_var,gene_var,pval_var,padj_var){
   # Read module genes
-  node_score <- read_csv(paste0(gpsnet_result_path, t, gpsnet_result_suffix, '.txt'), col_names = FALSE)# !! Check if file suffix is txt !!
+  node_score <- read_csv(paste0(gpsnet_result_path, t, gpsnet_result_suffix), col_names = FALSE)# !! Check if file suffix is txt !!
   colnames(node_score) <- c('ncbi_id', 'gene_confidence_score')
   node_score$gene_confidence_score=as.numeric(node_score$gene_confidence_score)
   nodes_list <- as.character(node_score$ncbi_id)  # Convert to character
@@ -114,64 +98,14 @@ prep_net=function(t,
   # Filter node_score again to ensure it matches the nodes in filtered_df
   node_score <- node_score %>% filter(ncbi_id %in% common_nodes)
   
-  if (is_label_pathway){
-    # for each node, find if it belongs to highlight pathways
-    pathways=highlight_pathways %>% filter(cell_type==t)
-    pathway_gene_map <- list()
-    for (pathway_id in pathways$term_id){
-      # Map the pathway ID to its associated genes
-      gconvert_res <- gconvert(query = pathway_id, organism = "hsapiens", target = "ENTREZGENE_ACC")
-      pathway_ncbi_ids <- gconvert_res %>% 
-        select(target) %>% 
-        pull(target)
-      # Store the NCBI IDs in the list with pathway_id as the key
-      pathway_gene_map[[pathway_id]] <- pathway_ncbi_ids
-    }
-    
-    node_score <- node_score %>% 
-      mutate(pathway = NA_character_)
-    
-    # Check if each gene belongs to any of the pathways
-    for (i in seq_along(node_score$ncbi_id)) {
-      gene_id <- as.character(node_score$ncbi_id[i])
-      gene_pathways <- pathways$term_id[sapply(pathway_gene_map, function(ids) gene_id %in% ids)]
-      if (length(gene_pathways) > 0) {
-        if (length(gene_pathways) > 1) {
-          #node_score$pathway[i] <- 'Multiple Pathway'
-          pathway_name=c()
-          for (j in gene_pathways){
-            pathway_name=c(pathway_name,pathways$term_name[pathways$term_id == j])
-          }
-          node_score$pathway[i] <- paste(pathway_name,collapse = '|')
-        } else {
-          node_score$pathway[i] <- pathways$term_name[pathways$term_id == gene_pathways]
-        }
-      } else{
-        node_score$pathway[i] <- 'Other'
-      }
-    }
-  }
   return(list(filtered_df=filtered_df,node_score=node_score))
 }
 
-plot_net=function(t,nodes,edges,is_label_pathway,color_by,log2FC_var){
+plot_net=function(t,nodes,edges,color_by,log2FC_var){
   # Add edge color
   nodes$ncbi_id <- as.character(nodes$ncbi_id)
   edges$from <- as.character(edges$from)
   edges$to <- as.character(edges$to)
-
-  if (is_label_pathway){
-    # Create a lookup table for pathways
-    pathway_lookup <- nodes %>% select(ncbi_id, pathway) %>% deframe()
-    # Vectorized operation to determine edge colors
-    edges <- edges %>%
-      mutate(color = ifelse(pathway_lookup[from] == 'Other' | pathway_lookup[to] == 'Other', '#ececec', 'black'))
-    
-    # Reorder the levels of the pathway factor dynamically
-    unique_pathways <- unique(nodes$pathway)
-    reordered_levels <- c(setdiff(unique_pathways, c("Multiple Pathway", "Other")), "Multiple Pathway", "Other")
-    nodes$pathway <- factor(nodes$pathway, levels = reordered_levels)
-  }
     
   # create graph
   g <- graph_from_data_frame(edges, directed = FALSE,nodes)
@@ -222,12 +156,11 @@ for (t in traits) {
   # ---- Prepare Node and Edge ----
   dfs_list=prep_net(t,
                     gpsnet_result_path,gpsnet_result_suffix,
-                    gpsnet_raw_input_path,log2FC_var,gene_var,pval_var,padj_var,
-                    is_label_pathway)
+                    gpsnet_raw_input_path,log2FC_var,gene_var,pval_var,padj_var)
 
   # ---- Plot Network ----
   nodes=as.data.frame(dfs_list$node_score)
   edges=dfs_list$filtered_df
-  plot_net(t,nodes,edges,is_label_pathway,color_by,log2FC_var)
+  plot_net(t,nodes,edges,color_by,log2FC_var)
 }
 
