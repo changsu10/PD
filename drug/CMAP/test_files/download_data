@@ -1,0 +1,11 @@
+Download the following CMAP data from CMAP website:
+cellLineList.data
+instanceList.data
+cmapData.data
+instanceNames.data
+instID.data
+pValue.rda
+instanceAndCellLineList.data
+pValueByCell.rda
+instanceCellNames.data
+rankmatrix.rda

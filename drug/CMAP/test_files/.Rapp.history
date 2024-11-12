@@ -1,0 +1,3 @@
+load("/Users/alisonke/Downloads/CMAP-master/test_files/rankmatrix.rda")
+load("/Users/alisonke/Downloads/CMAP-master/test_files/pValue.rda")
+load("/Users/manage/Desktop/CMAP/test_files/pValue.rda")
