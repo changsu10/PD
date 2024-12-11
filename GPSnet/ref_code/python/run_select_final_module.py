@@ -1,14 +1,13 @@
 import os
 
-cutoff_list=[0.005,0.01,0.05,0.1,0.5]
-# trait_list=['B_cells','Dendritic_cells','Fibroblasts','Keratinocytes','T_cells','Endothelial_cells',
-#             'Plasma_cells','Proliferating_cells','Sweat_gland_Myoepithelial_cells']
-trait_list=['Keratinocytes_filtered','T_cells_filtered','Fibroblasts_filtered']
-deg_p_list=[0.05,0.01,0.001]
-conn_p_list=[0.05,0.01]
-is_smoothing='no'
-steps='0,20000,40000,60000,80000'
-summary_df='../summary.tsv'
+cutoff_list=[0.001,0.003,0.005,0.01]
+trait_list=['B_cells_filtered','Endothelial_cells_filtered','Fibroblasts_filtered','Keratinocytes_filtered','T_cells_filtered',
+'Myeloid_filtered','Myofibroblast_filtered','Plasma_cells_filtered','Sweat_gland_Myoepithelial_cells_filtered']
+deg_p_list=[0.05]
+conn_p_list=[0.01]
+is_smoothing='yes'
+steps='0,10000,20000,30000,40000,50000,60000,70000,80000'
+summary_df='../9cellTypes_summary.tsv'
 
 for t in trait_list:
     for cutoff in cutoff_list:

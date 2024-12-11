@@ -10,6 +10,7 @@ Related scripts:
 1. Open `run_pathway_analysis.R`. Set working directory to `pathway/code`, and modify paths under `Set Path` section.
 2. run `run_pathway_analysis.R`. It will use `gprofier` package to find enriched pathways and plot bubble plots.
 
+* For HS, refer to `run_pathway_analysis_HS.R`
 
 ## Group Pathways
 ### Knowledge Driven -- Pre-defined groups from literature search
