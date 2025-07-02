@@ -113,7 +113,9 @@ for (trait in traits){
                             exclude_iea=TRUE,
                             sources = c("GO"),
                             organism = "hsapiens",
+                            evcodes = TRUE,
                             multi_query = FALSE)
+
   print(paste('running',trait))
   if (is.null(one_trait_gostres)){
     cat('No enriched pathways in',trait)
@@ -141,7 +143,7 @@ for (trait in traits){
   revigo_GO=revigo_df[revigo_df$Representative=='null',]$`Term ID`#select representative GO
 
   # save if do not need ancestors
-  save_df=result_table[result_table$term_id %in% revigo_GO,c('term_id','term_name','p_value','source','term_size')]
+  save_df=result_table[result_table$term_id %in% revigo_GO,c('term_id','term_name','p_value','source','term_size','intersection')]
   write.table(save_df,paste0(save_path,trait,'_enrichedGO_filtered.tsv'),sep='\t',row.names = F,quote=F)
 
   # save BP separately

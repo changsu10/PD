@@ -115,7 +115,9 @@ for (trait in traits){
                             exclude_iea=TRUE,
                             sources = c("GO"),
                             organism = "hsapiens",
+                            evcodes = TRUE,
                             multi_query = FALSE)
+
   if (is.null(one_trait_gostres)){
     cat('No enriched pathways in',trait)
     next
@@ -124,7 +126,7 @@ for (trait in traits){
   #result_table=result_table[result_table$term_size>5,]
   
   ## no pruning
-  save_table=result_table[,c('term_id','term_name','p_value','source','term_size')]
+  save_table=result_table[,c('term_id','term_name','p_value','source','term_size','intersection')]
   #save_table$ancestor_name=rep(NA,dim(save_table)[1])
   write.table(save_table,paste0(save_path,trait,'_enrichedGO_filtered.tsv'),sep='\t',row.names = F,quote=F)
   

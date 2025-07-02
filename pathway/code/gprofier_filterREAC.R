@@ -54,7 +54,9 @@ for (trait in traits){
                             exclude_iea=TRUE,
                             sources = c("REAC"),
                             organism = "hsapiens",
+                            evcodes = TRUE,
                             multi_query = FALSE)
+
   if (is.null(one_trait_gostres)){
     cat('No enriched pathways in',trait)
     next
@@ -62,7 +64,7 @@ for (trait in traits){
   
   result_table=one_trait_gostres$result
   #result_table=result_table[result_table$term_size>5 & result_table$term_size<1000,]#filter pathways
-  level_df=result_table[,c('term_id','term_name','p_value','source','term_size')]
+  level_df=result_table[,c('term_id','term_name','p_value','source','term_size','intersection')]
   write.table(level_df,paste0(save_path,trait,'_enrichedREAC_filtered.tsv'),sep='\t',row.names = F,quote=F)
 
   ## Comment the following if do not need to extract ancestors
